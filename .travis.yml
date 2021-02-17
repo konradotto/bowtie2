@@ -1,6 +1,11 @@
 dist: xenial
 language: cpp
 sudo: required
+addons:
+  sonarcloud:
+    organization: "bioinf"
+    token:
+      secure: "a1e412c4e018841d56bf144b8699d252a73866be" # encrypted value of your token
 branches:
   only:
     - master
@@ -87,19 +92,13 @@ before_script:
   - $CC --version
   - $CXX --version
 script: travis_wait 25 make -j $NPROC allall && make simple-test
-notifications:
-  slack:
-    secure: tfzT8N1fNV+oSV7tide9WrAj3ifs+LONJ3fCH1tUzexqrx23te4lE0oAj9C1cEMJ4evyRYwHNG8HZoLCOy8EfapqbWm6vgLIlkIBpeZ9E6f2jG6v0YuVDWWpqQC3qdGXCqWtHPjgs3i5OLsLwwQ/LItLoTqpBk2aYv+vGNs2F9g=
-addons:
-  sonarcloud:
-    organization: "bioinf"
-    token:
-      secure: "**************************" # encrypted value of your token
-
-script:
   # Wraps the compilation with the Build Wrapper to generate configuration (used
   # later by the SonarScanner) into the "bw-output" folder
   - build-wrapper-linux-x86-64 --out-dir bw-output <your clean build command>
   # And finally run the SonarCloud analysis - read the "sonar-project.properties"
   # file to see the specific configuration
   - sonar-scanner -Dsonar.cfamily.build-wrapper-output=bw-output
+notifications:
+  slack:
+    secure: tfzT8N1fNV+oSV7tide9WrAj3ifs+LONJ3fCH1tUzexqrx23te4lE0oAj9C1cEMJ4evyRYwHNG8HZoLCOy8EfapqbWm6vgLIlkIBpeZ9E6f2jG6v0YuVDWWpqQC3qdGXCqWtHPjgs3i5OLsLwwQ/LItLoTqpBk2aYv+vGNs2F9g=
+
